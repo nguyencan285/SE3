@@ -8,6 +8,7 @@ const multer = require('multer');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+
 server.use(express.static('public'));
 server.set('view engine', 'ejs');
 server.use(express.urlencoded({ extended: true }));
@@ -76,7 +77,7 @@ server.get('/delete-category/:id', function (req, res) {
 server.get('/create-category/', function (req, res) {
     res.render('create-category');
 });
-
+/*
 server.post('/create-category', upload.single('categoryImage'), function (req, res) {
     const formData = req.body;
     const categoryImage = req.file;
@@ -96,7 +97,7 @@ server.post('/create-category', upload.single('categoryImage'), function (req, r
 
         res.redirect('/category');
     });
-});
+});*/
 
 server.get('/edit-category/:id', function (req, res) {
     let id = req.params.id;
@@ -266,26 +267,20 @@ server.get('/api/delete-category/:id', function (req, res) {
 
 
 //api create-category
-server.post('/api/create-category', upload.single('categoryImage'), function (req, res) {
+server.post('/create-category', upload.single('categoryImage'), function (req, res) {
     const formData = req.body;
-    const categoryImage = req.file;
-
-    // Validate form data and file upload
-    if (!formData.name || !formData.status || !categoryImage) {
-        return res.status(400).send('Bad Request: Missing required data');
-    }
-
+    console.log(req.body);
+    
     // Insert into the category table, including the image path
-    const insertQuery = 'INSERT INTO category (name, status, image_path) VALUES (?, ?, ?)';
-    db.run(insertQuery, [formData.name, formData.status, '/uploads/' + categoryImage.filename], function (err) {
+    const insertQuery = 'INSERT INTO category (name, status, image_path) VALUES (?, ?,?)';
+    db.run(insertQuery, [formData.name, formData.status,'/upload/'+formData.image_path], function (err,data) {
         if (err) {
             console.error(err.message);
             return res.status(500).send('Internal Server Error');
         }
 
         res.send({
-            result:data
-        })
+            result:data});
     });
 });
 

@@ -21,3 +21,10 @@ http://localhost:8000/add-user
  }
 
 
+http://localhost:8000/create-category
+{
+            "id": "",
+            "name": "wtfffffff",
+            "status": "1",
+            "image_path": "1701872743810-VergilDMC5.png"
+        }
