@@ -1,4 +1,5 @@
-//GET
+//GET METHOD
+
 ADMIN 
 http://localhost:8000/api/user
 
@@ -6,8 +7,10 @@ http://localhost:8000/api/user
 http://localhost:8000/api/caterogy 
 
 
-USER
 http://localhost:8000/api/customer
+
+EDIT
+http://localhost:8000/api/edit-category/:id
 
 //POST
 
@@ -21,7 +24,7 @@ http://localhost:8000/api/add-user
  }
 
 
-http://localhost:8000/create-category
+http://localhost:8000/api/create-category
 {
             "id": "",
             "name": "wtfffffff",
@@ -29,6 +32,8 @@ http://localhost:8000/create-category
             "image_path": "1701872743810-VergilDMC5.png"
             }
 
+//PUT 
+http://localhost:8000/api/edit-category/:id
 //DELETE 
 category
 http://localhost:8000/delete-category/:id

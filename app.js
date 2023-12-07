@@ -194,7 +194,7 @@ server.post('/add-user', function (req, res) {
         return res.status(400).send('Bad Request: Missing required data');
     }
 
-    // Check if the email already exists in the database
+
     const emailCheckQuery = 'SELECT * FROM account WHERE email = ?';
     db.get(emailCheckQuery, [formData.email], function (err, row) {
         if (err) {
@@ -202,12 +202,12 @@ server.post('/add-user', function (req, res) {
             return res.status(500).send('Internal Server Error');
         }
 
-        // If the email already exists, send a message
+
         if (row) {
             return res.status(409).send('Conflict: Email already exists'); 
         }
 
-        // If the email doesn't exist, proceed with user creation
+        
         const insertQuery = 'INSERT INTO account (name, email, role, password) VALUES (?, ?, ?, ?)';
         db.run(insertQuery, [formData.name, formData.email, formData.role, formData.password], function (err) {
             if (err) {
@@ -237,7 +237,6 @@ server.get('/delete-user/:id', function (req, res) {
 
 /*---------API-------------*/
 
-// Routes
 
 server.get('/api/category', function (req, res) {
    /* db.all('SELECT id, name, status, image_path FROM category', (err, rows)  {
@@ -289,7 +288,7 @@ server.delete('/delete-category/:id', function (req, res) {
 });
 
 
-//api create-category
+
 server.post('/api/create-category', upload.single('categoryImage'), function (req, res) {
     const formData = req.body;
     console.log(req.body);
@@ -306,7 +305,7 @@ server.post('/api/create-category', upload.single('categoryImage'), function (re
             result:formData});
     });
 });
-
+/*
 server.get('/api/edit-category/:id', function (req, res) {
     let id = req.params.id;
     let query = 'SELECT * FROM category WHERE id=?';
@@ -322,23 +321,6 @@ server.get('/api/edit-category/:id', function (req, res) {
         }
     });
 });
-/*
-server.get('/edit-category/:id', function (req, res) {
-    let id = req.params.id;
-    let query = 'SELECT * FROM category WHERE id=?';
-
-    db.get(query, [id], function (err, category) {
-        if (!err) {
-            res.render( {
-                result: category
-            });
-        } else {
-            console.error(err.message);
-            res.status(500).send('Internal Server Error');
-        }
-    });
-});
-
 */
 
 
@@ -401,7 +383,39 @@ console.log(formData);
 
 
 
+server.get('/api/edit-category/:id', function (req, res) {
+    let id = req.params.id;
+    let query = 'SELECT * FROM category WHERE id=?';
 
+    db.get(query, [id], function (err, category) {
+        if (!err) {
+            res.send({
+                result: category
+            });
+        } else {
+            console.error(err.message);
+            res.status(500).send('Internal Server Error');
+        }
+    });
+});
+
+
+server.put('/api/edit-category/:id', function (req, res) {
+    let id = req.params.id;
+    let formData = req.body;
+    let query = 'UPDATE category SET name=?, status=? WHERE id=?';
+
+    db.run(query, [formData.name, formData.status, id], function (err,data) {
+        if (!err) {
+            res.send({
+                result:data
+            })
+        } else {
+            console.error(err.message);
+            res.status(500).send('Internal Server Error');
+        }
+    });
+});
 
 
 
