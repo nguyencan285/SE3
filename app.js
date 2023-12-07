@@ -77,7 +77,7 @@ server.get('/delete-category/:id', function (req, res) {
 server.get('/create-category/', function (req, res) {
     res.render('create-category');
 });
-/*
+
 server.post('/create-category', upload.single('categoryImage'), function (req, res) {
     const formData = req.body;
     const categoryImage = req.file;
@@ -97,7 +97,7 @@ server.post('/create-category', upload.single('categoryImage'), function (req, r
 
         res.redirect('/category');
     });
-});*/
+});
 
 server.get('/edit-category/:id', function (req, res) {
     let id = req.params.id;
@@ -114,6 +114,7 @@ server.get('/edit-category/:id', function (req, res) {
         }
     });
 });
+
 
 server.post('/edit-category/:id', function (req, res) {
     let id = req.params.id;
@@ -187,11 +188,13 @@ server.get('/add-user', function (req, res) {
 
 server.post('/add-user', function (req, res) {
     const formData = req.body;
-console.log(formData);
+    console.log(formData);
+
     if (!formData.name || !formData.email || !formData.role || !formData.password) {
         return res.status(400).send('Bad Request: Missing required data');
     }
 
+    // Check if the email already exists in the database
     const emailCheckQuery = 'SELECT * FROM account WHERE email = ?';
     db.get(emailCheckQuery, [formData.email], function (err, row) {
         if (err) {
@@ -199,22 +202,24 @@ console.log(formData);
             return res.status(500).send('Internal Server Error');
         }
 
+        // If the email already exists, send a message
         if (row) {
-            return res.status(409).send('Conflict: Email already exists');
+            return res.status(409).send('Conflict: Email already exists'); 
         }
 
+        // If the email doesn't exist, proceed with user creation
         const insertQuery = 'INSERT INTO account (name, email, role, password) VALUES (?, ?, ?, ?)';
-        db.run(insertQuery, [formData.name, formData.email, formData.role, formData.password], function (err,data) {
+        db.run(insertQuery, [formData.name, formData.email, formData.role, formData.password], function (err) {
             if (err) {
                 console.error(err.message);
                 return res.status(500).send('Internal Server Error');
             }
 
-            res.send({
-                result:data});
+            res.redirect('/user');
         });
     });
 });
+
 
 server.get('/delete-user/:id', function (req, res) {
     let id = req.params.id;
@@ -229,6 +234,7 @@ server.get('/delete-user/:id', function (req, res) {
         }
     });
 });
+
 /*---------API-------------*/
 
 // Routes
@@ -249,11 +255,28 @@ server.get('/api/category', function (req, res) {
     }); 
 });
 
-server.get('/api/delete-category/:id', function (req, res) {
+server.delete('/delete-user/:id', function (req, res) {
+    let id = req.params.id;
+    let query = 'DELETE FROM account WHERE id = ?';
+
+    db.run(query, [id], function (err,data) {
+        if (!err) {
+            res.send({
+                result:data
+            })
+        } else {
+            console.error(err.message);
+            res.status(500).send('Internal Server Error');
+        }
+    });
+});
+
+
+server.delete('/delete-category/:id', function (req, res) {
     let id = req.params.id;
     let query = 'DELETE FROM category WHERE id= ?';
 
-    db.run(query, [id], function (err) {
+    db.run(query, [id], function (err,data) {
         if (!err) {
             res.send({
                 result:data
@@ -267,7 +290,7 @@ server.get('/api/delete-category/:id', function (req, res) {
 
 
 //api create-category
-server.post('/create-category', upload.single('categoryImage'), function (req, res) {
+server.post('/api/create-category', upload.single('categoryImage'), function (req, res) {
     const formData = req.body;
     console.log(req.body);
     
@@ -280,7 +303,7 @@ server.post('/create-category', upload.single('categoryImage'), function (req, r
         }
 
         res.send({
-            result:data});
+            result:formData});
     });
 });
 
@@ -299,17 +322,16 @@ server.get('/api/edit-category/:id', function (req, res) {
         }
     });
 });
-
-server.post('/api/edit-category/:id', function (req, res) {
+/*
+server.get('/edit-category/:id', function (req, res) {
     let id = req.params.id;
-    let formData = req.body;
-    let query = 'UPDATE category SET name=?, status=? WHERE id=?';
+    let query = 'SELECT * FROM category WHERE id=?';
 
-    db.run(query, [formData.name, formData.status, id], function (err) {
+    db.get(query, [id], function (err, category) {
         if (!err) {
-            res.send({
-                result:data
-            })
+            res.render( {
+                result: category
+            });
         } else {
             console.error(err.message);
             res.status(500).send('Internal Server Error');
@@ -317,6 +339,7 @@ server.post('/api/edit-category/:id', function (req, res) {
     });
 });
 
+*/
 
 
 
@@ -343,45 +366,40 @@ server.get('/api/user', function (req, res) {
         }
     });
 });
-
-
-
-/*server.post('/api/add-user', function (req, res) {
+server.post('/api/add-user', function (req, res) {
     const formData = req.body;
-    console.log(formData)
-   
+
+console.log(formData);
+    if (!formData.name || !formData.email || !formData.role || !formData.password) {
+        return res.status(400).send('Bad Request: Missing required data');
+    }
 
     const emailCheckQuery = 'SELECT * FROM account WHERE email = ?';
-   
+    db.get(emailCheckQuery, [formData.email], function (err, row) {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        if (row) {
+            return res.status(409).send('Conflict: Email already exists');
+        }
+
         const insertQuery = 'INSERT INTO account (name, email, role, password) VALUES (?, ?, ?, ?)';
         db.run(insertQuery, [formData.name, formData.email, formData.role, formData.password], function (err,data) {
+           
             if (err) {
                 console.error(err.message);
                 return res.status(500).send('Internal Server Error');
             }
 
-            res.render({
-                result:data
-            })
-        });
-  
-});*/
-
-server.get('/api/delete-user/:id', function (req, res) {
-    let id = req.params.id;
-    let query = 'DELETE FROM account WHERE id = ?';
-
-    db.run(query, [id], function (err) {
-        if (!err) {
             res.send({
-                result:data
-            })
-        } else {
-            console.error(err.message);
-            res.status(500).send('Internal Server Error');
-        }
+                result:formData});
+        });
     });
 });
+
+
 
 
 

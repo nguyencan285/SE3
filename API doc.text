@@ -11,7 +11,7 @@ http://localhost:8000/api/customer
 
 //POST
 
-http://localhost:8000/add-user 
+http://localhost:8000/api/add-user 
 {
    
       "name": "test",
@@ -27,4 +27,13 @@ http://localhost:8000/create-category
             "name": "wtfffffff",
             "status": "1",
             "image_path": "1701872743810-VergilDMC5.png"
-        }
+            }
+
+//DELETE 
+category
+http://localhost:8000/delete-category/:id
+Ex:
+http://localhost:8000/delete-category/12
+user
+
+Ex:http://localhost:8000/delete-user/12
