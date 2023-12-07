@@ -261,7 +261,8 @@ server.delete('/delete-user/:id', function (req, res) {
     db.run(query, [id], function (err,data) {
         if (!err) {
             res.send({
-                result:data
+                result:data,
+                message:"Delete user successfully"
             })
         } else {
             console.error(err.message);
@@ -278,7 +279,8 @@ server.delete('/delete-category/:id', function (req, res) {
     db.run(query, [id], function (err,data) {
         if (!err) {
             res.send({
-                result:data
+                result:data,
+                message:"Delete category successfully"
             })
         } else {
             console.error(err.message);
@@ -302,7 +304,8 @@ server.post('/api/create-category', upload.single('categoryImage'), function (re
         }
 
         res.send({
-            result:formData});
+            result:formData,
+            message:"Create category successfully"});
     });
 });
 /*
@@ -376,7 +379,8 @@ console.log(formData);
             }
 
             res.send({
-                result:formData});
+                result:formData,
+                message:"Add user successfully"});
         });
     });
 });
@@ -408,7 +412,8 @@ server.put('/api/edit-category/:id', function (req, res) {
     db.run(query, [formData.name, formData.status, id], function (err,data) {
         if (!err) {
             res.send({
-                result:data
+                result:data,
+                message:"Update successfully"
             })
         } else {
             console.error(err.message);
