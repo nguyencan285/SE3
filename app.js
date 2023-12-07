@@ -265,7 +265,7 @@ server.get('/api/delete-category/:id', function (req, res) {
 });
 
 
-
+//api create-category
 server.post('/api/create-category', upload.single('categoryImage'), function (req, res) {
     const formData = req.body;
     const categoryImage = req.file;
