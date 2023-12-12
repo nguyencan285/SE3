@@ -290,24 +290,30 @@ server.delete('/delete-category/:id', function (req, res) {
 });
 
 
-
 server.post('/api/create-category', upload.single('categoryImage'), function (req, res) {
     const formData = req.body;
-    console.log(req.body);
-    
+    const categoryImage = req.file; 
+
+    // Validate form data and file upload
+    if (!formData.name || !formData.status || !categoryImage) {
+        return res.status(400).send('Bad Request: Missing required data');
+    }
+
     // Insert into the category table, including the image path
-    const insertQuery = 'INSERT INTO category (name, status, image_path) VALUES (?, ?,?)';
-    db.run(insertQuery, [formData.name, formData.status,'/upload/'+formData.image_path], function (err,data) {
+    const insertQuery = 'INSERT INTO category (name, status, image_path) VALUES (?, ?, ?)';
+    db.run(insertQuery, [formData.name, formData.status, '/uploads/' + categoryImage.filename], function (err, data) {
         if (err) {
             console.error(err.message);
             return res.status(500).send('Internal Server Error');
         }
 
         res.send({
-            result:formData,
-            message:"Create category successfully"});
+            result: formData,
+            message: 'Create category successfully'
+        });
     });
 });
+
 /*
 server.get('/api/edit-category/:id', function (req, res) {
     let id = req.params.id;
@@ -406,6 +412,7 @@ server.get('/api/edit-category/:id', function (req, res) {
 
 server.put('/api/edit-category/:id', function (req, res) {
     let id = req.params.id;
+    
     let formData = req.body;
     let query = 'UPDATE category SET name=?, status=? WHERE id=?';
 

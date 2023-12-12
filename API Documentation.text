@@ -25,12 +25,12 @@ http://localhost:8000/api/add-user
 
 
 http://localhost:8000/api/create-category
-{
-            "id": "",
-            "name": "wtfffffff",
-            "status": "1",
-            "image_path": "1701872743810-VergilDMC5.png"
-            }
+ 
+ use form-data
+ name: test api
+ status: 1
+ categoryImage:OIP.jpg
+
 
 //PUT 
 http://localhost:8000/api/edit-category/:id
