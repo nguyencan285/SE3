@@ -7,7 +7,7 @@ http://localhost:8000/api/user
 http://localhost:8000/api/caterogy 
 
 
-http://localhost:8000/api/customer
+http://localhost:8000/api/p
 
 EDIT
 http://localhost:8000/api/edit-category/:id
@@ -28,7 +28,7 @@ http://localhost:8000/api/create-category
  
  use form-data
  name: test api
- status: 1
+ price: 80
  categoryImage:OIP.jpg
 
 
