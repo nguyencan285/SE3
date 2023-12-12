@@ -308,7 +308,11 @@ server.post('/api/create-category', upload.single('categoryImage'), function (re
         }
 
         res.send({
-            result: formData,
+            result: {
+                name: formData.name,
+                status: formData.status,
+                imageFileName: categoryImage.filename
+            },
             message: 'Create category successfully'
         });
     });
