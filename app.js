@@ -49,7 +49,7 @@ server.get('/gioi-thieu', function (req, res) {
 });
 
 server.get('/category', function (req, res) {
-    db.all('SELECT id, name, status, image_path FROM category', (err, rows) => {
+    db.all('SELECT id, name, price, image_path FROM category', (err, rows) => {
         if (err) {
             console.error(err.message);
             res.status(500).send('Internal Server Error');
@@ -83,13 +83,13 @@ server.post('/create-category', upload.single('categoryImage'), function (req, r
     const categoryImage = req.file;
 
     // Validate form data and file upload
-    if (!formData.name || !formData.status || !categoryImage) {
+    if (!formData.name || !formData.price || !categoryImage) {
         return res.status(400).send('Bad Request: Missing required data');
     }
 
     // Insert into the category table, including the image path
-    const insertQuery = 'INSERT INTO category (name, status, image_path) VALUES (?, ?, ?)';
-    db.run(insertQuery, [formData.name, formData.status, '/uploads/' + categoryImage.filename], function (err) {
+    const insertQuery = 'INSERT INTO category (name, price, image_path) VALUES (?, ?, ?)';
+    db.run(insertQuery, [formData.name, formData.price, '/uploads/' + categoryImage.filename], function (err) {
         if (err) {
             console.error(err.message);
             return res.status(500).send('Internal Server Error');
@@ -119,9 +119,9 @@ server.get('/edit-category/:id', function (req, res) {
 server.post('/edit-category/:id', function (req, res) {
     let id = req.params.id;
     let formData = req.body;
-    let query = 'UPDATE category SET name=?, status=? WHERE id=?';
+    let query = 'UPDATE category SET name=?, price=? WHERE id=?';
 
-    db.run(query, [formData.name, formData.status, id], function (err) {
+    db.run(query, [formData.name, formData.price, id], function (err) {
         if (!err) {
             res.redirect('/category');
         } else {
@@ -161,7 +161,7 @@ server.get('/logout', function (req, res) {
 });
 
 server.get('/customer', function (req, res) {
-    db.all('SELECT id, name, status, image_path FROM category', (err, rows) => {
+    db.all('SELECT id, name, price, image_path FROM category', (err, rows) => {
         if (err) {
             console.error(err.message);
             res.status(500).send('Internal Server Error');
@@ -247,7 +247,7 @@ server.get('/api/category', function (req, res) {
             res.render('category', { categories: rows });
         }
     });*/
-     db.all('SELECT id, name, status, image_path FROM category', (err, data) => {
+     db.all('SELECT id, name, price, image_path FROM category', (err, data) => {
       res.send({
         result:data
       })
@@ -295,13 +295,13 @@ server.post('/api/create-category', upload.single('categoryImage'), function (re
     const categoryImage = req.file; 
 
     // Validate form data and file upload
-    if (!formData.name || !formData.status || !categoryImage) {
+    if (!formData.name || !formData.price || !categoryImage) {
         return res.status(400).send('Bad Request: Missing required data');
     }
 
     // Insert into the category table, including the image path
-    const insertQuery = 'INSERT INTO category (name, status, image_path) VALUES (?, ?, ?)';
-    db.run(insertQuery, [formData.name, formData.status, '/uploads/' + categoryImage.filename], function (err, data) {
+    const insertQuery = 'INSERT INTO category (name, price, image_path) VALUES (?, ?, ?)';
+    db.run(insertQuery, [formData.name, formData.price, '/uploads/' + categoryImage.filename], function (err, data) {
         if (err) {
             console.error(err.message);
             return res.status(500).send('Internal Server Error');
@@ -310,7 +310,7 @@ server.post('/api/create-category', upload.single('categoryImage'), function (re
         res.send({
             result: {
                 name: formData.name,
-                status: formData.status,
+                price: formData.price,
                 imageFileName: categoryImage.filename
             },
             message: 'Create category successfully'
@@ -340,7 +340,7 @@ server.get('/api/edit-category/:id', function (req, res) {
 
 
 server.get('/api/customer', function (req, res) {
-    db.all('SELECT id, name, status, image_path FROM category', (err, data) =>{
+    db.all('SELECT id, name, price, image_path FROM category', (err, data) =>{
        
             res.send({
                 result:data
@@ -418,9 +418,9 @@ server.put('/api/edit-category/:id', function (req, res) {
     let id = req.params.id;
     
     let formData = req.body;
-    let query = 'UPDATE category SET name=?, status=? WHERE id=?';
+    let query = 'UPDATE category SET name=?, price=? WHERE id=?';
 
-    db.run(query, [formData.name, formData.status, id], function (err,data) {
+    db.run(query, [formData.name, formData.price, id], function (err,data) {
         if (!err) {
             res.send({
                 result:data,
@@ -433,6 +433,105 @@ server.put('/api/edit-category/:id', function (req, res) {
     });
 });
 
+
+
+
+
+
+
+
+
+// Handle adding a category to the cart
+server.post('/add-to-cart/:id', function (req, res) {
+    const categoryId = req.params.id;
+    const cart = session.getItem('cart') || [];
+    
+    // Check if the category is already in the cart
+    const isInCart = cart.some(item => item.id === categoryId);
+    
+    if (!isInCart) {
+        // If the category is not in the cart, add it
+        cart.push({ id: categoryId });
+        session.setItem('cart', cart);
+        res.redirect('/customer');
+    } else {
+        // If the category is already in the cart, redirect back to the customer page
+        res.redirect('/customer');
+    }
+});
+
+// Display the user's cart
+server.get('/cart', function (req, res) {
+    
+    const cart = session.getItem('cart') || [];
+    res.render('cart', { cart: cart });
+});
+
+// Add a new route to handle adding a category to the cart
+server.get('/add-to-cart/:id', function (req, res) {
+    const categoryId = req.params.id;
+    const cart = session.getItem('cart') || [];
+
+    // Check if the category is already in the cart
+    const isInCart = cart.some(item => item.id === categoryId);
+
+    if (!isInCart) {
+        // If the category is not in the cart, add it
+        cart.push({ id: categoryId });
+        session.setItem('cart', cart);
+        res.redirect('/customer');
+    } else {
+        // If the category is already in the cart, redirect back to the customer page
+        res.redirect('/customer');
+    }
+});
+
+
+
+
+
+// Add a new route to handle removing a category from the cart
+server.get('/remove-from-cart/:id', function (req, res) {
+    const categoryId = req.params.id;
+    const cart = session.getItem('cart') || [];
+
+    // Filter out the category to be removed from the cart
+    const updatedCart = cart.filter(item => item.id !== categoryId);
+
+    // Update the cart in the session storage
+    session.setItem('cart', updatedCart);
+
+    res.redirect('/cart');
+});
+
+
+
+
+/// Add a new route to handle buying a category from the cart
+server.get('/buy/:id', function (req, res) {
+    const categoryId = req.params.id;
+    const cart = session.getItem('cart') || [];
+
+    // Add additional logic for the "Buy" operation if needed
+    // For example, you may want to remove the category from the database
+    // Replace the following lines with your actual logic
+    db.run('DELETE FROM category WHERE id = ?', [categoryId], function (err) {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).send('Internal Server Error');
+        }
+
+    });
+
+   
+    // Filter out the category to be bought from the cart
+    const updatedCart = cart.filter(item => item.id !== categoryId);
+
+    // Update the cart in the session storage
+    session.setItem('cart', updatedCart);
+
+    res.redirect('/cart');
+});
 
 
 
