@@ -1,3 +1,5 @@
+<!-- category.ejs -->
+
 <%- include('header') -%>
 
 <div class="container">
@@ -13,12 +15,13 @@
                     <img src="<%= item.image_path || '/path/to/default/image.jpg' %>" class="card-img-top" alt="<%= item.name %> Image">
                     <div class="card-body">
                         <p class="card-text"><%= item.name %></p>
+                        <!-- Display the price instead of status -->
+                        <p class="card-text">Price: <%= item.price %> $</p>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
                                 <a onclick="return confirm('Delete ?')" href="/delete-category/<%= item.id %>" class="btn btn-sm btn-outline-danger">Delete</a>
                                 <a href="/edit-category/<%= item.id %>" class="btn btn-sm btn-outline-primary">Edit</a>
                             </div>
-                            <small class="text-muted"><%= item.status == 0 ? 'Tạm ẩn' : 'Hiển thị' %></small>
                         </div>
                     </div>
                 </div>
