@@ -143,7 +143,10 @@ server.post('/login', function (req, res) {
             if (data[0].role === 'customer') {
                 res.redirect('/customer');
                 //console.log(data[0]);
-            } else {
+            } else if( data[0].role === 'artist') {
+                res.redirect('/artist');
+                //console.log(data[0]);
+            }else {
                 res.redirect('/category');
                // console.log(data[0]);
             }
@@ -154,7 +157,16 @@ server.post('/login', function (req, res) {
         }
     });
 });
-
+server.get('/artist', function (req, res) {
+    db.all('SELECT id, name, price, image_path FROM category', (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send('Internal Server Error');
+        } else {
+            res.render('artist', { categories: rows });
+        }
+    });
+});
 server.get('/logout', function (req, res) {
     session.removeItem('admin_login');
     res.redirect('/login');
@@ -254,6 +266,24 @@ server.get('/api/category', function (req, res) {
     }); 
 });
 
+server.get('/api/customer', function (req, res) {
+    db.all('SELECT id, name, price, image_path FROM category', (err, data) =>{
+       
+            res.send({
+                result:data
+            })
+        
+    });
+});
+server.get('/api/artist', function (req, res) {
+    db.all('SELECT id, name, price, image_path FROM category', (err, data) =>{
+       
+            res.send({
+                result:data
+            })
+        
+    });
+});
 server.delete('/delete-user/:id', function (req, res) {
     let id = req.params.id;
     let query = 'DELETE FROM account WHERE id = ?';
