@@ -142,10 +142,10 @@ server.post('/login', function (req, res) {
             session.setItem('admin_login', data[0].name);
             if (data[0].role === 'customer') {
                 res.redirect('/customer');
-                console.log(data[0]);
+                //console.log(data[0]);
             } else {
                 res.redirect('/category');
-                console.log(data[0]);
+               // console.log(data[0]);
             }
         } else {
             res.render('login', {
@@ -188,7 +188,7 @@ server.get('/add-user', function (req, res) {
 
 server.post('/add-user', function (req, res) {
     const formData = req.body;
-    console.log(formData);
+    //console.log(formData);
 
     if (!formData.name || !formData.email || !formData.role || !formData.password) {
         return res.status(400).send('Bad Request: Missing required data');
@@ -318,25 +318,6 @@ server.post('/api/create-category', upload.single('categoryImage'), function (re
     });
 });
 
-/*
-server.get('/api/edit-category/:id', function (req, res) {
-    let id = req.params.id;
-    let query = 'SELECT * FROM category WHERE id=?';
-
-    db.get(query, [id], function (err, category) {
-        if (!err) {
-            res.send({
-                result:category
-            })
-        } else {
-            console.error(err.message);
-            res.status(500).send('Internal Server Error');
-        }
-    });
-});
-*/
-
-
 
 
 server.get('/api/customer', function (req, res) {
@@ -364,7 +345,7 @@ server.get('/api/user', function (req, res) {
 server.post('/api/add-user', function (req, res) {
     const formData = req.body;
 
-console.log(formData);
+   //console.log(formData);
     if (!formData.name || !formData.email || !formData.role || !formData.password) {
         return res.status(400).send('Bad Request: Missing required data');
     }
@@ -512,9 +493,6 @@ server.get('/buy/:id', function (req, res) {
     const categoryId = req.params.id;
     const cart = session.getItem('cart') || [];
 
-    // Add additional logic for the "Buy" operation if needed
-    // For example, you may want to remove the category from the database
-    // Replace the following lines with your actual logic
     db.run('DELETE FROM category WHERE id = ?', [categoryId], function (err) {
         if (err) {
             console.error(err.message);
@@ -534,6 +512,45 @@ server.get('/buy/:id', function (req, res) {
 });
 
 
+
+
+
+
+
+server.get('/category/:id', (req, res) => {
+    const categoryId = req.params.id;
+
+    db.get('SELECT id, name, price, image_path FROM category WHERE id = ?', [categoryId], (err, category) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send('Internal Server Error');
+        } else {
+            if (category) {
+                res.render('category-detail', { category });
+            } else {
+                res.status(404).send('Category not found');
+            }
+        }
+    });
+});
+
+
+server.get('/customer/category/:id', (req, res) => {
+    const categoryId = req.params.id;
+
+    db.get('SELECT id, name, price, image_path FROM category WHERE id = ?', [categoryId], (err, category) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send('Internal Server Error');
+        } else {
+            if (category) {
+                res.render('cus-category-detail', { category });
+            } else {
+                res.status(404).send('Category not found');
+            }
+        }
+    });
+});
 
 
 

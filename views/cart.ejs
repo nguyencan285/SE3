@@ -8,10 +8,83 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        nav.navbar {
+            background-color: #343a40;
+            border: none;
+            border-radius: 0;
+            margin-bottom: 30px;
+        }
+
+        nav.navbar a {
+            color: #ffffff;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            border: 1px solid #e3e3e3;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+        }
+
+        .cart-item img {
+            max-width: 100px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+
+        .cart-item div {
+            flex: 1;
+        }
+
+        .cart-item h4 {
+            color: #343a40;
+            margin-bottom: 5px;
+        }
+
+        .cart-item p {
+            color: #868e96;
+            margin-bottom: 15px;
+        }
+
+        .btn-remove, .btn-buy {
+            margin-top: 10px;
+        }
+
+        .btn-remove {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-buy {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .empty-cart {
+            color: #868e96;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-inverse">
-        <a class="navbar-brand" ></a>
+        <a class="navbar-brand" href="#"></a>
         <ul class="nav navbar-nav">
             <li class="active">
                 <a href="/customer">Art Gallery</a>
@@ -28,27 +101,25 @@
         </ul>
     </nav>
 
-<div class="container">
-    <h2>Your Cart</h2>
+    <div class="container">
+        <h2>Your Cart</h2>
 
-    <% if (cart.length > 0) { %>
-        <% cart.forEach(item => { %>
-            <div class="cart-item">
-                <img src="<%= item.image_path || '/path/to/default/image.jpg' %>" alt="<%= item.name %> Image">
-                <div>
-                    <h4><%= item.name %></h4>
-                    <p>Category ID: <%= item.id %></p>
+        <% if (cart.length > 0) { %>
+            <% cart.forEach(item => { %>
+                <div class="cart-item">
+                    <img src="<%= item.image_path || '/path/to/default/image.jpg' %>" alt="<%= item.name %> Image">
+                    <div>
+                        <h4><%= item.name %></h4>
+                        <p>Category ID: <%= item.id %></p>
+                        <a href="/remove-from-cart/<%= item.id %>" class="btn btn-remove btn-sm">Remove from Cart</a>
+                        <a href="/buy/<%= item.id %>" class="btn btn-buy btn-sm">Buy</a>
+                    </div>
                 </div>
-                <a href="/remove-from-cart/<%= item.id %>" class="btn btn-danger btn-sm">Remove from Cart</a>
-                <a href="/buy/<%= item.id %>" class="btn btn-success btn-sm">Buy</a>
-            </div>
-        <% }); %>
-    <% } else { %>
-        <p class="empty-cart">Your cart is empty.</p>
-    <% } %>
-</div>
-
-    
+            <% }); %>
+        <% } else { %>
+            <p class="empty-cart">Your cart is empty.</p>
+        <% } %>
+    </div>
 
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -56,10 +127,3 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-

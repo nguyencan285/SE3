@@ -1,24 +1,21 @@
 <%- include('header') -%>
 
-<div class="container">
-    <h2>User List</h2>
-    <a href="/add-user" class="btn btn-sm btn-primary">Add User</a>
+<div class="container mt-4">
+    <h2 class="mb-4">User Management</h2>
+    <a href="/add-user" class="btn btn-primary">Add User</a>
     <hr>
 
     <div class="row">
         <% categories.forEach((user, key) => { %>
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
                     <div class="card-body">
-                        <p class="card-text">ID: <%= user.id %></p>
-                        <p class="card-text">Name: <%= user.name %></p>
-                        <p class="card-text">Email: <%= user.email %></p>
-                        <p class="card-text">Role: <%= user.role %></p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <a onclick="return confirm('Delete this user?')" href="/delete-user/<%= user.id %>" class="btn btn-sm btn-outline-danger">Delete</a>
-                               
-                            </div>
+                        <h5 class="card-title">User ID: <%= user.id %></h5>
+                        <p class="card-text"><strong>Name:</strong> <%= user.name %></p>
+                        <p class="card-text"><strong>Email:</strong> <%= user.email %></p>
+                        <p class="card-text"><strong>Role:</strong> <%= user.role %></p>
+                        <div class="d-flex justify-content-end">
+                            <a onclick="return confirm('Delete this user?')" href="/delete-user/<%= user.id %>" class="btn btn-sm btn-danger">Delete</a>
                         </div>
                     </div>
                 </div>

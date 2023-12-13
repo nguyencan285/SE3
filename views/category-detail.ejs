@@ -1,0 +1,30 @@
+<!-- category-detail.ejs -->
+
+<%- include('header') -%>
+
+<div class="container mt-4">
+    <h2>Category Details</h2>
+    <hr>
+
+    <% if (category) { %>
+        <div class="row">
+            <div class="col-md-6">
+                <img src="<%= category.image_path || '/path/to/default/image.jpg' %>" class="img-fluid" alt="<%= category.name %> Image">
+            </div>
+            <div class="col-md-6">
+                <h3><%= category.name %></h3>
+                <p>Price: <%= category.price %> $</p>
+                <!-- Add other category details here -->
+
+                <div class="mt-4">
+                    <a href="/edit-category/<%= category.id %>" class="btn btn-primary">Edit Category</a>
+                    <a onclick="return confirm('Delete this category?')" href="/delete-category/<%= category.id %>" class="btn btn-danger">Delete Category</a>
+                </div>
+            </div>
+        </div>
+    <% } else { %>
+        <p>No category found.</p>
+    <% } %>
+</div>
+
+<%- include('footer') -%>
