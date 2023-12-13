@@ -87,9 +87,10 @@
         <% categories.forEach((item, key) => { %>
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
-                    <!-- Wrap the image in a hyperlink to the category detail page -->
-                    <a href="/customer/category/<%= item.id %>">
-                        <img src="<%= item.image_path || '/path/to/default/image.jpg' %>" class="card-img-top" alt="<%= item.name %> Image">
+                    
+                   <!-- <a href="/customer/category/<%= item.id %>">-->
+                        <img src="<%= item.image_path  %>" class="card-img-top" alt="<%= item.name %> Image">
+                
                     </a>
                     <div class="card-body">
                         <h5 class="card-title"><%= item.name %></h5>

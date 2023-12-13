@@ -563,6 +563,4 @@ server.get('/customer/category/:id', (req, res) => {
 
 
 
-server.listen(8000, function () {
-    console.log('Server is running on https://localhost:8000');
-});
+server.listen(process.env.PORT||8000);
