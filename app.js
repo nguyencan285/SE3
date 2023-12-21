@@ -78,6 +78,9 @@ server.get('/create-category/', function (req, res) {
     res.render('create-category');
 });
 
+server.get('/artist-create/', function (req, res) {
+    res.render('artist-create');
+});
 server.post('/create-category', upload.single('categoryImage'), function (req, res) {
     const formData = req.body;
     const categoryImage = req.file;
@@ -96,6 +99,26 @@ server.post('/create-category', upload.single('categoryImage'), function (req, r
         }
 
         res.redirect('/category');
+    });
+});
+server.post('/artist-create', upload.single('categoryImage'), function (req, res) {
+    const formData = req.body;
+    const categoryImage = req.file;
+
+    // Validate form data and file upload
+    if (!formData.name || !formData.price || !categoryImage) {
+        return res.status(400).send('Bad Request: Missing required data');
+    }
+
+    // Insert into the category table, including the image path
+    const insertQuery = 'INSERT INTO category (name, price, image_path) VALUES (?, ?, ?)';
+    db.run(insertQuery, [formData.name, formData.price, '/uploads/' + categoryImage.filename], function (err) {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).send('Internal Server Error');
+        }
+
+        res.redirect('/artist');
     });
 });
 
