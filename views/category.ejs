@@ -10,7 +10,7 @@
             <div class="col-md-4 mb-4">
                 <div class="card h-100">
                     <a href="/category/<%= item.id %>">
-                        <img src="<%= item.image_path || '/path/to/default/image.jpg' %>" class="card-img-top" alt="<%= item.name %>" style="max-height: 200px; max-width: 100%;">
+                        <img src="<%= item.image_path || '/path/to/default/image.jpg' %>" class="card-img-top" alt="<%= item.name %>" style="height: 100%; width: 100%; aspect-ratio: 3/2;">
                     </a>
                     <div class="card-body">
                         <h5 class="card-title"><%= item.name %></h5>
