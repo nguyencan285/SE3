@@ -86,7 +86,7 @@
     <% if (category) { %>
         <div class="row">
             <div class="col-md-6">
-                <img src="<%= category.image_path || '/path/to/default/image.jpg' %>" class="img-fluid" alt="<%= category.name %> Image">
+                <img src="<%= category.image_path || '/path/to/default/image.jpg' %>" style="height: 100%; width: 100%; aspect-ratio: 3/2;" alt="<%= category.name %> Image">
             </div>
             <div class="col-md-6">
                 <h3><%= category.name %></h3>
